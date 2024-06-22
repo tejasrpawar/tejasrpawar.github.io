@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home</title>
-    <link>http://localhost:1313/</link>
+    <link>https://tejasrpawar.github.io/</link>
     <description>Recent content on Home</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Thu, 28 Feb 2019 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://tejasrpawar.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://tejasrpawar.github.io/about/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://tejasrpawar.github.io/about/</guid>
       <description>Hello! I&amp;rsquo;m Tejas, a passionate and driven graduate student specializing in Computer Science, currently based in Salt Lake City, Utah. I am pursuing my MS degree in Computer Science from the University of Utah. With a strong background in software engineering, I have a proven track record of delivering high-quality software solutions and optimizing technology to meet business goals.&#xA;Before getting into Graduate school, I worked as Full-Stack Software Engineer at Airtel Digital, India for 2 years where I worked on multiple platforms ranging from E-commerce, Payments Bank in an Agile environment following latest industry practices like Microservice architecture, Frontend frameworks, Data streaming and DevOps CI/CD pipelining to name a few.</description>
     </item>
     <item>
       <title>Contact</title>
-      <link>http://localhost:1313/contact/</link>
+      <link>https://tejasrpawar.github.io/contact/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/contact/</guid>
+      <guid>https://tejasrpawar.github.io/contact/</guid>
       <description>I’d love to hear from you! If you’ve got any interesting jobs or projects or whether you have a question about my work, a collaboration idea, or just want to say hello, feel free to reach out.&#xA;Get in Touch Link to heading Email: tejasrpawar0108@gmail.com LinkedIn: linkedin.com/in/tejaspawar007 GitHub: github.com/tejasrpawar Location: Salt Lake City, UT, USA </description>
     </item>
     <item>
       <title>Projects</title>
-      <link>http://localhost:1313/projects/</link>
+      <link>https://tejasrpawar.github.io/projects/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/projects/</guid>
+      <guid>https://tejasrpawar.github.io/projects/</guid>
       <description>Browse through my Github for more projects.&#xA;CALTECH Bird Dataset Classification Using Capsule Network Link to heading Technology: Python3, High Performance Computing&#xA;Description: Developed an advanced classification system for 200 species of North American birds, each represented by 60 samples, by expanding a preexisting Convolutional Neural Network (CNN) to a Capsule Network (CapsNet).&#xA;Enhanced model accuracy, leveraging CapsNet’s superior ability to recognize spatial hierarchies and relationships within the dataset, significantly improving classification performance with the use of High Performance Computing.</description>
     </item>
     <item>
       <title>Resume</title>
-      <link>http://localhost:1313/resume/</link>
+      <link>https://tejasrpawar.github.io/resume/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/resume/</guid>
+      <guid>https://tejasrpawar.github.io/resume/</guid>
       <description>See my one-page resume here&#xA;Education Link to heading University of Utah Link to heading August 2023 - Present&#xA;Masters of Science in Computer Science&#xA;GPA: 3.8/4&#xA;Relevant Courses: Advanced Algorithms, Computer Architecture, Machine Learning, Operating Systems&#xA;Indian Institute of Information Technology, Allahabad Link to heading July 2017 - June 2021&#xA;Bachelor of Technology in Information Technology&#xA;CGPA: 8.18/10&#xA;Relevant Courses: Computer Science- Design And Analysis Of Algorithms, Data Structures And Algorithms, Database Management System, Operating System, Object Oriented Methodology, Data Mining, Deep Learning.</description>
     </item>
   </channel>
