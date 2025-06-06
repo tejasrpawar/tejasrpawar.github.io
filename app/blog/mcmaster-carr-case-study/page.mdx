@@ -1,0 +1,29 @@
+# The McMaster Carr website case study
+
+<Cover
+  src="/images/mcmaster_carr.jpeg"
+  alt="The McMaster Carr website case study"
+  caption=""
+  className="shadow-lg rounded-lg"
+/>
+---
+Recently, a post about McMaster-Carr -a century-old industrial supplier with a website that’s shockingly fast caught my attention, and I realized that it isn't a new phenomena but has been making rounds for quite a while. 
+
+Their numbers are extraordinary: a Largest Contentful Paint (LCP) in about 174ms, repeat visits loading in under 10ms thanks to service workers. Not only are the numbers impressive, but the user experience on this site feels like I am flying.
+ 
+No buzzwords or modern frameworks, just a meticulous approach to web performance.
+
+The magic lies in simplicity. Their server delivers pure HTML, skipping the usual client-side JavaScript delays. Hovering over a link triggers a prefetch of the next page’s HTML, so when you click, the content swaps instantly via pushState. It’s clean, precise, and shockingly effective.
+
+Caching is an important part too, and it is aggressive. Pages are stored globally via CDNs, while a service worker handles critical assets locally. Fonts and DNS lookups are even preloaded before the browser asks for them. Every detail is accounted for, which makes sure that effort is wasted in delivering content.
+
+What I likes the most was their ruthless focus on zero bloat(thank you!!). Critical CSS is inlined directly into the HTML head tag, and JavaScript is loaded minimally -only when needed.
+They still use tools like YUI(I had no idea what this was) and jQuery—not for nostalgia, but because they’re lean and purpose-driven and 'just work'. Nothing modern or trendy; it’s about being efficient.
+
+While I still haven't figured out everything that makes this website blazingly fast, I realize how much the development I come across or indulge in tend to equate innovation with unnecessary complexity. 
+This site isn’t outdated; it’s a masterclass in optimization. The techniques used here have been present for decades, which most modern websites ignore(?). 
+Unironically, there is a perception ingrained which makes us trust the website more, if it takes a couple of seconds to load or displays a bunch of spinners while one stares at the screen 😹. 
+
+The meat of this argument: performance isn’t about the tools we use; it’s about the priorities that are being set. The next time I find myself reaching for a 50KB library to optimize a backend API, I’ll remember this century-old website that outpaces modern ones by focusing on the basics and the necessary. 
+
+Try it out for yourself: https://www.mcmaster.com/
