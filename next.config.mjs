@@ -8,7 +8,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/nim' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/tejasrpawar.github.io' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/tejasrpawar.github.io/' : '',
 };
 
 const withMDX = createMDX({
