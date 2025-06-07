@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://tejasrpawar.github.io/sitemap.xml 
