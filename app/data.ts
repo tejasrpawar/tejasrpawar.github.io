@@ -120,7 +120,7 @@ export const PROJECTS: Project[] = [
 export const WORK_EXPERIENCE: WorkExperience[] = [
   {
     company: 'Goldman Sachs',
-    title: 'Software Engineer II(Associate)',
+    title: 'Software Engineer II (Associate)',
     start: 'May 2025',
     end: 'present',
     link: '',
