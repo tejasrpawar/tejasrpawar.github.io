@@ -1,15 +1,59 @@
 {
   "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-05dafc5cadd7a0ba.js",
+      "static/chunks/4bd1b696-033283023f57a2ef.js",
+      "static/chunks/517-3d4401d55f537ab6.js",
+      "static/chunks/main-app-dfcca5beb11331ce.js",
+      "static/chunks/app/_not-found/page-9de5d1119dd37782.js"
+    ],
     "/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/layout.css",
-      "static/chunks/app/layout.js"
+      "static/chunks/webpack-05dafc5cadd7a0ba.js",
+      "static/chunks/4bd1b696-033283023f57a2ef.js",
+      "static/chunks/517-3d4401d55f537ab6.js",
+      "static/chunks/main-app-dfcca5beb11331ce.js",
+      "static/css/1afd66b74da248aa.css",
+      "static/chunks/333-a08bc6a55df9c91d.js",
+      "static/chunks/450-6d443426cd0998ef.js",
+      "static/chunks/app/layout-ab486338fcaf1cae.js"
     ],
     "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/webpack-05dafc5cadd7a0ba.js",
+      "static/chunks/4bd1b696-033283023f57a2ef.js",
+      "static/chunks/517-3d4401d55f537ab6.js",
+      "static/chunks/main-app-dfcca5beb11331ce.js",
+      "static/chunks/333-a08bc6a55df9c91d.js",
+      "static/chunks/450-6d443426cd0998ef.js",
+      "static/chunks/app/page-8ad519aeaf7e5d9b.js"
+    ],
+    "/blog/layout": [
+      "static/chunks/webpack-05dafc5cadd7a0ba.js",
+      "static/chunks/4bd1b696-033283023f57a2ef.js",
+      "static/chunks/517-3d4401d55f537ab6.js",
+      "static/chunks/main-app-dfcca5beb11331ce.js",
+      "static/chunks/333-a08bc6a55df9c91d.js",
+      "static/chunks/app/blog/layout-6e6654218a179c8f.js"
+    ],
+    "/blog/s-in-docker/page": [
+      "static/chunks/webpack-05dafc5cadd7a0ba.js",
+      "static/chunks/4bd1b696-033283023f57a2ef.js",
+      "static/chunks/517-3d4401d55f537ab6.js",
+      "static/chunks/main-app-dfcca5beb11331ce.js",
+      "static/chunks/app/blog/s-in-docker/page-2e0e0d78af6bba84.js"
+    ],
+    "/blog/mcmaster-carr-case-study/page": [
+      "static/chunks/webpack-05dafc5cadd7a0ba.js",
+      "static/chunks/4bd1b696-033283023f57a2ef.js",
+      "static/chunks/517-3d4401d55f537ab6.js",
+      "static/chunks/main-app-dfcca5beb11331ce.js",
+      "static/chunks/app/blog/mcmaster-carr-case-study/page-af68e252155fef3b.js"
+    ],
+    "/blog/the-hashtag-dilemma-on-x/page": [
+      "static/chunks/webpack-05dafc5cadd7a0ba.js",
+      "static/chunks/4bd1b696-033283023f57a2ef.js",
+      "static/chunks/517-3d4401d55f537ab6.js",
+      "static/chunks/main-app-dfcca5beb11331ce.js",
+      "static/chunks/app/blog/the-hashtag-dilemma-on-x/page-79102fe9464788a1.js"
     ]
   }
 }
