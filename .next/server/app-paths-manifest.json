@@ -1,9 +1,8 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/robots.txt/route": "app/robots.txt/route.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
-  "/blog/s-in-docker/page": "app/blog/s-in-docker/page.js",
   "/blog/mcmaster-carr-case-study/page": "app/blog/mcmaster-carr-case-study/page.js",
-  "/blog/the-hashtag-dilemma-on-x/page": "app/blog/the-hashtag-dilemma-on-x/page.js"
+  "/blog/the-hashtag-dilemma-on-x/page": "app/blog/the-hashtag-dilemma-on-x/page.js",
+  "/blog/s-in-docker/page": "app/blog/s-in-docker/page.js"
 }
