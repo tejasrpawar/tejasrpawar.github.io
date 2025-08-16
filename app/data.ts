@@ -119,12 +119,25 @@ export const PROJECTS: Project[] = [
 
 export const WORK_EXPERIENCE: WorkExperience[] = [
   {
-    company: 'Goldman Sachs',
-    title: 'Software Engineer II (Associate)',
-    start: 'May 2025',
+    company: 'Amazon',
+    title: 'Software Dev Engineer',
+    start: 'August 2025',
     end: 'present',
     link: '',
     id: 'work1',
+    description: '',
+    responsibilities: [
+      ],
+    technologies: [
+    ]
+  },
+  {
+    company: 'Goldman Sachs',
+    title: 'Software Engineer II (Associate)',
+    start: 'May 2025',
+    end: 'August 2025',
+    link: '',
+    id: 'work2',
     description: '',
     responsibilities: [
       ],
@@ -137,7 +150,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     start: 'Jul 2021',
     end: 'Jul 2023',
     link: 'https://airtel.in',
-    id: 'work2',
+    id: 'work3',
     description: '',
     responsibilities: [
       'Developed and maintained robust Java Spring Boot applications, implementing rigorous unit testing protocols ensuring 95% code coverage, ensuring high-quality software delivery and reduction in production bugs by over 20%',
@@ -164,7 +177,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     start: 'Jan 2021',
     end: 'Jul 2021',
     link: 'https://airtel.in',
-    id: 'work3',
+    id: 'work4',
     description: '',
     responsibilities: [
       'Planned and programmed a self-serve tool using Java Spring Boot and containerized the application with Docker, which streamlined third-party integration with Airtel Digital Store and reduced integration time by over 50%',
