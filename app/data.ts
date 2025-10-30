@@ -127,8 +127,17 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     id: 'work1',
     description: '',
     responsibilities: [
+      'Designed and deployed an end-to-end AI-driven automation framework using Amazon Bedrock and AWS Lambda to autonomously detect and remediate dashboard anomalies, streamlining On-Call operations and reducing manual triage workload by over 20%.',
+      'Engineered and deployed a scalable Pipeline Build Fixer Service in Java on AWS (ECS, Lambda, CloudWatch) to automate build recovery workflows across fraud prevention systems. Integrated the service into the internal Tool Catalog for organization-wide adoption, reducing manual recovery effort by over 25% and improving CI/CD reliability.',
+      'Elevated Tier-1 service reliability for the core Inline Plugin by proactively identifying and resolving critical latent defects impacting the customer checkout flow, reducing PagerDuty alerts by 15% and improving end-user transaction stability.'
       ],
     technologies: [
+      'AWS',
+      'Java',
+      'ECS',
+      'Lambda',
+      'GenAI',
+      'Amazon Bedrock'
     ]
   },
   {
@@ -140,8 +149,12 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     id: 'work2',
     description: '',
     responsibilities: [
+      'Engineered Callisto, an eventually consistent distributed system for multi-million USD trade automation in equity risk management using Java, React, and Kafka Streams. Optimized high-throughput, multithreaded workflows to ensure data integrity across global trading systems.'
       ],
     technologies: [
+      'Java',
+      'React',
+      'Kafka Streams'
     ]
   },
   {
