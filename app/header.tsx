@@ -22,7 +22,7 @@ export function Header() {
       </div>
       <div className="flex items-center gap-4">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Salt Lake City, Utah
+          Bellevue, WA, USA
         </p>
         <Magnetic springOptions={{ bounce: 0 }} intensity={0.3}>
           <a
