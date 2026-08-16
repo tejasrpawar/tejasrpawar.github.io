@@ -51,16 +51,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: next
+        # NOTE: `static_site_generator: next` is intentionally omitted. It tries to
+        # auto-inject `output: 'export'` into next.config.mjs and crashes on the
+        # `withMDX(nextConfig)` wrapper (TypeError: error must be an instance of Error).
+        # next.config.mjs already sets `output: 'export'` and `images.unoptimized`, and
+        # this is a user root site (served at /), so no basePath injection is needed.
       - name: Restore cache
         uses: actions/cache@v4
         with:
