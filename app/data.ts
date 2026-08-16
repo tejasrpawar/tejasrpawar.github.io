@@ -119,7 +119,7 @@ export const PROJECTS: Project[] = [
 
 export const WORK_EXPERIENCE: WorkExperience[] = [
   {
-    company: 'Amazon',
+    company: 'Amazon Web Services',
     title: 'Software Dev Engineer',
     start: 'August 2025',
     end: 'present',
@@ -127,9 +127,11 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     id: 'work1',
     description: '',
     responsibilities: [
-      'Designed and deployed an end-to-end AI-driven automation framework using Amazon Bedrock and AWS Lambda to autonomously detect and remediate dashboard anomalies, streamlining On-Call operations and reducing manual triage workload by over 20%.',
-      'Engineered and deployed a scalable Pipeline Build Fixer Service in Java on AWS (ECS, Lambda, CloudWatch) to automate build recovery workflows across fraud prevention systems. Integrated the service into the internal Tool Catalog for organization-wide adoption, reducing manual recovery effort by over 25% and improving CI/CD reliability.',
-      'Elevated Tier-1 service reliability for the core Inline Plugin by proactively identifying and resolving critical latent defects impacting the customer checkout flow, reducing PagerDuty alerts by 15% and improving end-user transaction stability.'
+      'Designed and launched an action execution service for Quick Suite\'s AI agents from scratch to GA in 5 months as sole owner, built on Lambda, Smithy, and CDK across 7 production regions.',
+      'Scaled the platform 300x (100 to 30,000 TPS) ahead of launch: authored the load-test design with a Principal Engineer, resolved 10+ bottlenecks across DynamoDB caching, ECS fleet scaling, and throttle tuning, and uncovered a latent critical cryptographic offloading failure fixed across 5 services.',
+      'Shipped 20+ agent connectors (Google Drive, OneDrive, SharePoint, Zoom, Microsoft Teams) and MCP integrations, enabling tool calling for hundreds of thousands of users; automated connector onboarding, cutting partner integration from 2 weeks to under 1 day.',
+      'Delivered a connector version-upgrade system with Step Functions rollout safety gates and SNS-driven automation, migrating 500+ live customer connections across all 7 regions with zero downtime.',
+      'Owned production reliability: eliminated 115,000+ daily errors in the Quick Suite Webcrawler (80% fewer customer escalations), built an AI-driven anomaly detection framework with Amazon Bedrock, cutting manual on-call triage by 20%, and resolved 10+ recurring weekly high-severity issues.'
       ],
     technologies: [
       'AWS',
@@ -149,7 +151,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     id: 'work2',
     description: '',
     responsibilities: [
-      'Engineered Callisto, an eventually consistent distributed system for multi-million USD trade automation in equity risk management using Java, React, and Kafka Streams. Optimized high-throughput, multithreaded workflows to ensure data integrity across global trading systems.'
+      'Engineered an eventually consistent distributed system for multi-million USD trade automation in equity risk management using Java, React, and Kafka Streams, optimizing high-throughput multithreaded workflows for data integrity.'
       ],
     technologies: [
       'Java',
@@ -166,11 +168,10 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     id: 'work3',
     description: '',
     responsibilities: [
-      'Developed and maintained robust Java Spring Boot applications, implementing rigorous unit testing protocols ensuring 95% code coverage, ensuring high-quality software delivery and reduction in production bugs by over 20%',
-      'Collaborated with 10+ external partners and cross-functional teams to identify, onboard, and integrate 100+ new products and services into Digital Store catalog, resulting in 20% increase in customer acquisition',
-      'Led microservices development with Java Spring Boot and Docker, achieving 15% growth in user engagement, 40% faster API response, and scalable data pipelines via Apache Kafka; also resolving critical e-commerce issues',
-      'Innovated and built a lead delivery system for Airtel SHOP app, integrating seamlessly with third-party platforms, which reduced lead transfer time by 50% and boosted lead conversion rates by 40%, enhancing sales performance',
-'Implemented UI enhancements and infrastructure revamps, migrating 50% of database traffic to Aerospike integrated with Terraform, resulting in 30% latency reduction and 20% uptime improvement'
+      'Led backend modernization using Docker, Kafka, and scalable data pipelines, improving API response times by 40% and driving 15% higher user engagement across Airtel\'s digital platform.',
+      'Built a lead delivery system end-to-end and revamped infrastructure with Aerospike and Terraform, cutting lead transfer time by 50%, reducing latency by 30%, and improving uptime by 20%.',
+      'Spearheaded identification, onboarding, and integration of 100+ partner products and services into Airtel\'s Digital Store catalog with 10+ external partners, increasing customer acquisition by 20%.',
+      'Developed RESTful APIs in Java Spring Boot microservices with MongoDB and real-time ELK Stack monitoring, achieving 95% test coverage, 99.9% uptime, and 25% fewer order failures.'
     ],
     technologies: [
       'Java',
