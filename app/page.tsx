@@ -1,5 +1,5 @@
 'use client'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { XIcon } from 'lucide-react'
 import { Spotlight } from '@/components/ui/spotlight'
 import { Magnetic } from '@/components/ui/magnetic'
@@ -38,8 +38,22 @@ const VARIANTS_SECTION = {
   visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
 }
 
+// §14 Reduced motion — a gentle, non-vestibular cross-fade (no travel, no blur).
+const VARIANTS_SECTION_REDUCED = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+}
+
+// §4 Behavior over animation — a critically damped spring (no overshoot) settles
+// section reveals naturally instead of a fixed-duration tween.
 const TRANSITION_SECTION = {
-  duration: 0.3,
+  type: 'spring' as const,
+  bounce: 0,
+  duration: 0.5,
+}
+
+const TRANSITION_SECTION_REDUCED = {
+  duration: 0.2,
 }
 
 type ProjectVideoProps = {
@@ -105,7 +119,7 @@ function MagneticSocialLink({
         href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className="group relative inline-flex shrink-0 items-center gap-[1px] rounded-full bg-zinc-100 px-2.5 py-1 text-sm text-black transition-colors duration-200 hover:bg-zinc-950 hover:text-zinc-50 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+        className="group relative inline-flex shrink-0 items-center gap-[1px] rounded-full bg-zinc-100 px-2.5 py-1 text-sm text-black transition-[background-color,color,transform] duration-200 ease-out hover:bg-zinc-950 hover:text-zinc-50 active:scale-[0.96] dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
       >
         {children}
         <svg
@@ -182,6 +196,19 @@ export default function Personal() {
     })
   }
 
+  // §14 Honor the OS "reduce motion" setting: swap spring travel + blur for a
+  // plain cross-fade, and expand/collapse instantly rather than animating.
+  const shouldReduceMotion = useReducedMotion()
+  const variantsSection = shouldReduceMotion
+    ? VARIANTS_SECTION_REDUCED
+    : VARIANTS_SECTION
+  const transitionSection = shouldReduceMotion
+    ? TRANSITION_SECTION_REDUCED
+    : TRANSITION_SECTION
+  const transitionExpand = shouldReduceMotion
+    ? { duration: 0 }
+    : { type: 'spring' as const, bounce: 0, duration: 0.3 }
+
   return (
     <motion.main
       className="space-y-24"
@@ -190,83 +217,86 @@ export default function Personal() {
       animate="visible"
     >
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        variants={variantsSection}
+        transition={transitionSection}
       >
       </motion.section>
 
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        variants={variantsSection}
+        transition={transitionSection}
       >
         <h3 className="mb-5 text-lg font-medium">Work Experience</h3>
         <div className="flex flex-col space-y-2">
           {WORK_EXPERIENCE.map((job) => (
             <div
               key={job.id}
-              className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
+              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
             >
               <Spotlight
                 className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
                 size={64}
               />
               <div 
-                className="relative h-full w-full cursor-pointer rounded-[15px] bg-white p-4 dark:bg-zinc-950"
+                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
                 onClick={() => toggleWork(job.id)}
               >
-                <div className="relative flex w-full flex-row justify-between">
-                  <div>
+                <div className="relative flex w-full flex-row items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-normal dark:text-zinc-100">
                       {job.title}
                     </h4>
                     <p className="text-zinc-500 dark:text-zinc-400">
                       {job.company}
                     </p>
-                    <AnimatePresence>
-                      {expandedWorkIds.has(job.id) && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="mt-2 space-y-4 overflow-hidden"
-                        >
-                          <p className="text-zinc-500 dark:text-zinc-400">
-                            {job.description}
-                          </p>
-                          <div>
-                            <p className="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                              Key Responsibilities:
-                            </p>
-                            <ul className="list-inside list-disc space-y-1 text-sm text-zinc-500 dark:text-zinc-400">
-                              {job.responsibilities.map((resp, index) => (
-                                <li key={index}>{resp}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div>
-                            <p className="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                              Technologies:
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {job.technologies.map((tech, index) => (
-                                <span
-                                  key={index}
-                                  className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                  <p className="shrink-0 whitespace-nowrap text-xs text-zinc-600 dark:text-zinc-400">
                     {job.start} - {job.end}
                   </p>
                 </div>
+                <AnimatePresence>
+                  {expandedWorkIds.has(job.id) && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={transitionExpand}
+                      className="mt-3 space-y-4 overflow-hidden"
+                    >
+                      <div>
+                        <p className="mb-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-300">
+                          Key Responsibilities:
+                        </p>
+                        <ul className="space-y-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+                          {job.responsibilities.map((resp, index) => (
+                            <li key={index} className="flex gap-2">
+                              <span
+                                aria-hidden="true"
+                                className="mt-2 size-1 shrink-0 rounded-full bg-current opacity-40"
+                              />
+                              <span>{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="mb-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-300">
+                          Technologies:
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {job.technologies.map((tech, index) => (
+                            <span
+                              key={index}
+                              className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           ))}
@@ -274,62 +304,68 @@ export default function Personal() {
       </motion.section>
 
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        variants={variantsSection}
+        transition={transitionSection}
       >
         <h3 className="mb-5 text-lg font-medium">Education</h3>
         <div className="flex flex-col space-y-2">
           {EDUCATION.map((edu) => (
             <div
               key={edu.id}
-              className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
+              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
             >
               <Spotlight
                 className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
                 size={64}
               />
               <div 
-                className="relative h-full w-full cursor-pointer rounded-[15px] bg-white p-4 dark:bg-zinc-950"
+                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
                 onClick={() => toggleEducation(edu.id)}
               >
-                <div className="relative flex w-full flex-row justify-between">
-                  <div>
+                <div className="relative flex w-full flex-row items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-normal dark:text-zinc-100">
                       {edu.degree} in {edu.field}
                     </h4>
                     <p className="text-zinc-500 dark:text-zinc-400">
                       {edu.institution}
                     </p>
-                    <AnimatePresence>
-                      {expandedEducationIds.has(edu.id) && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="mt-2 space-y-2 overflow-hidden"
-                        >
-                          <p className="text-zinc-500 dark:text-zinc-400">
-                            GPA: {edu.gpa}
-                          </p>
-                          <div>
-                            <p className="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                              Key Courses:
-                            </p>
-                            <ul className="list-inside list-disc space-y-1 text-sm text-zinc-500 dark:text-zinc-400">
-                              {edu.courses.map((course, index) => (
-                                <li key={index}>{course}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                  <p className="shrink-0 whitespace-nowrap text-xs text-zinc-600 dark:text-zinc-400">
                     {edu.start} - {edu.end}
                   </p>
                 </div>
+                <AnimatePresence>
+                  {expandedEducationIds.has(edu.id) && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={transitionExpand}
+                      className="mt-3 space-y-2 overflow-hidden"
+                    >
+                      <p className="text-zinc-500 dark:text-zinc-400">
+                        GPA: {edu.gpa}
+                      </p>
+                      <div>
+                        <p className="mb-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-300">
+                          Key Courses:
+                        </p>
+                        <ul className="space-y-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+                          {edu.courses.map((course, index) => (
+                            <li key={index} className="flex gap-2">
+                              <span
+                                aria-hidden="true"
+                                className="mt-2 size-1 shrink-0 rounded-full bg-current opacity-40"
+                              />
+                              <span>{course}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           ))}
@@ -337,26 +373,26 @@ export default function Personal() {
       </motion.section>
 
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        variants={variantsSection}
+        transition={transitionSection}
       >
         <h3 className="mb-5 text-lg font-medium">Selected Projects</h3>
         <div className="flex flex-col space-y-2">
           {PROJECTS.map((project) => (
             <div
               key={project.id}
-              className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
+              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
             >
               <Spotlight
                 className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
                 size={64}
               />
               <div 
-                className="relative h-full w-full cursor-pointer rounded-[15px] bg-white p-4 dark:bg-zinc-950"
+                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
                 onClick={() => toggleProject(project.id)}
               >
-                <div className="relative flex w-full flex-row justify-between">
-                  <div>
+                <div className="relative flex w-full flex-row items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-normal dark:text-zinc-100">
                       {project.name}
                     </h4>
@@ -369,16 +405,22 @@ export default function Personal() {
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
+                          transition={transitionExpand}
                           className="mt-2 space-y-4 overflow-hidden"
                         >
                           <div>
                             <p className="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
                               Key Features:
                             </p>
-                            <ul className="list-inside list-disc space-y-1 text-sm text-zinc-500 dark:text-zinc-400">
+                            <ul className="space-y-1.5 text-sm text-zinc-500 dark:text-zinc-400">
                               {project.features.map((feature, index) => (
-                                <li key={index}>{feature}</li>
+                                <li key={index} className="flex gap-2">
+                                  <span
+                                    aria-hidden="true"
+                                    className="mt-2 size-1 shrink-0 rounded-full bg-current opacity-40"
+                                  />
+                                  <span>{feature}</span>
+                                </li>
                               ))}
                             </ul>
                           </div>
@@ -429,60 +471,60 @@ export default function Personal() {
       </motion.section>
 
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        variants={variantsSection}
+        transition={transitionSection}
       >
         <h3 className="mb-5 text-lg font-medium">Certifications</h3>
         <div className="flex flex-col space-y-2">
           {CERTIFICATIONS.map((cert) => (
             <div
               key={cert.id}
-              className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
+              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
             >
               <Spotlight
                 className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
                 size={64}
               />
               <div 
-                className="relative h-full w-full cursor-pointer rounded-[15px] bg-white p-4 dark:bg-zinc-950"
+                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
                 onClick={() => toggleCertification(cert.id)}
               >
-                <div className="relative flex w-full flex-row justify-between">
-                  <div>
+                <div className="relative flex w-full flex-row items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-normal dark:text-zinc-100">
                       {cert.name}
                     </h4>
                     <p className="text-zinc-500 dark:text-zinc-400">
                       {cert.issuer}
                     </p>
-                    <AnimatePresence>
-                      {expandedCertificationIds.has(cert.id) && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="mt-2 space-y-2 overflow-hidden"
-                        >
-                          <p className="text-zinc-500 dark:text-zinc-400">
-                            {cert.description}
-                          </p>
-                          <a
-                            href={cert.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-block text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                          >
-                            View Certificate →
-                          </a>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                  <p className="shrink-0 whitespace-nowrap text-xs text-zinc-600 dark:text-zinc-400">
                     {cert.date}
                   </p>
                 </div>
+                <AnimatePresence>
+                  {expandedCertificationIds.has(cert.id) && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={transitionExpand}
+                      className="mt-3 space-y-2 overflow-hidden"
+                    >
+                      <p className="text-zinc-500 dark:text-zinc-400">
+                        {cert.description}
+                      </p>
+                      <a
+                        href={cert.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                      >
+                        View Certificate →
+                      </a>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           ))}
@@ -490,8 +532,8 @@ export default function Personal() {
       </motion.section>
 
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        variants={variantsSection}
+        transition={transitionSection}
       >
         <h3 className="mb-3 text-lg font-medium">Blog</h3>
         <div className="flex flex-col space-y-0">
@@ -526,8 +568,8 @@ export default function Personal() {
       </motion.section>
 
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        variants={variantsSection}
+        transition={transitionSection}
       >
         <h3 className="mb-5 text-lg font-medium">Connect</h3>
         <p className="mb-5 text-zinc-600 dark:text-zinc-400">

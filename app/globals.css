@@ -23,3 +23,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============================================================
+   Apple-inspired polish (apple-design skill)
+   ============================================================ */
+
+/* §15 Typography — let the variable font pick its optical size, and give
+   body copy a comfortable, readable rhythm. */
+body {
+  font-optical-sizing: auto;
+}
+
+/* §15 Size-specific type: as text grows, leading tightens and tracking goes
+   negative (large letters read too far apart at their default spacing). */
+.text-display {
+  font-size: clamp(1.875rem, 1.05rem + 3vw, 2.75rem);
+  line-height: 1.06;
+  letter-spacing: -0.022em;
+  font-optical-sizing: auto;
+}
+
+/* §12 Materials — the translucent scroll-edge chrome blurs content beneath it. */
+.material-edge {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* §14 Reduced transparency — solidify the translucent chrome for users who
+   ask for it (frostier/opaque, no blur). */
+@media (prefers-reduced-transparency: reduce) {
+  .material-edge {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background-color: rgb(255 255 255 / 0.96) !important;
+  }
+  :is(.dark) .material-edge {
+    background-color: rgb(9 9 11 / 0.96) !important;
+  }
+}
+
+/* §14 Reduced motion — keep comprehension-aiding opacity changes, but drop
+   anything vestibular (smooth-scroll, long CSS transitions/animations).
+   JS spring reveals are gated separately with useReducedMotion(). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
