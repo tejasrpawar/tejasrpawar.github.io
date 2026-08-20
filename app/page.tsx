@@ -1,15 +1,5 @@
 'use client'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
-import { XIcon } from 'lucide-react'
-import { Spotlight } from '@/components/ui/spotlight'
-import { Magnetic } from '@/components/ui/magnetic'
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogClose,
-  MorphingDialogContainer,
-} from '@/components/ui/morphing-dialog'
 import Link from 'next/link'
 import { AnimatedBackground } from '@/components/ui/animated-background'
 import {
@@ -23,123 +13,25 @@ import {
 } from './data'
 import { useState } from 'react'
 
-const VARIANTS_CONTAINER = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
+const SECTION_VARIANTS = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
 }
 
-const VARIANTS_SECTION = {
-  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
-}
-
-// §14 Reduced motion — a gentle, non-vestibular cross-fade (no travel, no blur).
-const VARIANTS_SECTION_REDUCED = {
+const SECTION_VARIANTS_REDUCED = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
 }
 
-// §4 Behavior over animation — a critically damped spring (no overshoot) settles
-// section reveals naturally instead of a fixed-duration tween.
-const TRANSITION_SECTION = {
+const SECTION_TRANSITION = {
+  duration: 0.6,
+  ease: [0.25, 0.1, 0.25, 1] as const,
+}
+
+const EXPAND_TRANSITION = {
   type: 'spring' as const,
   bounce: 0,
-  duration: 0.5,
-}
-
-const TRANSITION_SECTION_REDUCED = {
-  duration: 0.2,
-}
-
-type ProjectVideoProps = {
-  src: string
-}
-
-function ProjectVideo({ src }: ProjectVideoProps) {
-  return (
-    <MorphingDialog
-      transition={{
-        type: 'spring',
-        bounce: 0,
-        duration: 0.3,
-      }}
-    >
-      <MorphingDialogTrigger>
-        <video
-          src={src}
-          autoPlay
-          loop
-          muted
-          className="aspect-video w-full cursor-zoom-in rounded-xl"
-        />
-      </MorphingDialogTrigger>
-      <MorphingDialogContainer>
-        <MorphingDialogContent className="relative aspect-video rounded-2xl bg-zinc-50 p-1 ring-1 ring-zinc-200/50 ring-inset dark:bg-zinc-950 dark:ring-zinc-800/50">
-          <video
-            src={src}
-            autoPlay
-            loop
-            muted
-            className="aspect-video h-[50vh] w-full rounded-xl md:h-[70vh]"
-          />
-        </MorphingDialogContent>
-        <MorphingDialogClose
-          className="fixed top-6 right-6 h-fit w-fit rounded-full bg-white p-1"
-          variants={{
-            initial: { opacity: 0 },
-            animate: {
-              opacity: 1,
-              transition: { delay: 0.3, duration: 0.1 },
-            },
-            exit: { opacity: 0, transition: { duration: 0 } },
-          }}
-        >
-          <XIcon className="h-5 w-5 text-zinc-500" />
-        </MorphingDialogClose>
-      </MorphingDialogContainer>
-    </MorphingDialog>
-  )
-}
-
-function MagneticSocialLink({
-  children,
-  link,
-}: {
-  children: React.ReactNode
-  link: string
-}) {
-  return (
-    <Magnetic springOptions={{ bounce: 0 }} intensity={0.3}>
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative inline-flex shrink-0 items-center gap-[1px] rounded-full bg-zinc-100 px-2.5 py-1 text-sm text-black transition-[background-color,color,transform] duration-200 ease-out hover:bg-zinc-950 hover:text-zinc-50 active:scale-[0.96] dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
-      >
-        {children}
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 15 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-3 w-3"
-        >
-          <path
-            d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
-            fill="currentColor"
-            fillRule="evenodd"
-            clipRule="evenodd"
-          ></path>
-        </svg>
-      </a>
-    </Magnetic>
-  )
+  duration: 0.35,
 }
 
 export default function Personal() {
@@ -148,444 +40,373 @@ export default function Personal() {
   const [expandedWorkIds, setExpandedWorkIds] = useState<Set<string>>(new Set())
   const [expandedProjectIds, setExpandedProjectIds] = useState<Set<string>>(new Set())
 
-  const toggleEducation = (id: string) => {
-    setExpandedEducationIds(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(id)) {
-        newSet.delete(id)
-      } else {
-        newSet.add(id)
-      }
-      return newSet
-    })
-  }
-
-  const toggleCertification = (id: string) => {
-    setExpandedCertificationIds(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(id)) {
-        newSet.delete(id)
-      } else {
-        newSet.add(id)
-      }
-      return newSet
-    })
-  }
-
-  const toggleWork = (id: string) => {
-    setExpandedWorkIds(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(id)) {
-        newSet.delete(id)
-      } else {
-        newSet.add(id)
-      }
-      return newSet
-    })
-  }
-
-  const toggleProject = (id: string) => {
-    setExpandedProjectIds(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(id)) {
-        newSet.delete(id)
-      } else {
-        newSet.add(id)
-      }
-      return newSet
-    })
-  }
-
-  // §14 Honor the OS "reduce motion" setting: swap spring travel + blur for a
-  // plain cross-fade, and expand/collapse instantly rather than animating.
   const shouldReduceMotion = useReducedMotion()
-  const variantsSection = shouldReduceMotion
-    ? VARIANTS_SECTION_REDUCED
-    : VARIANTS_SECTION
-  const transitionSection = shouldReduceMotion
-    ? TRANSITION_SECTION_REDUCED
-    : TRANSITION_SECTION
-  const transitionExpand = shouldReduceMotion
-    ? { duration: 0 }
-    : { type: 'spring' as const, bounce: 0, duration: 0.3 }
+  const variants = shouldReduceMotion ? SECTION_VARIANTS_REDUCED : SECTION_VARIANTS
+  const expandTransition = shouldReduceMotion ? { duration: 0 } : EXPAND_TRANSITION
+
+  const toggle = (setter: React.Dispatch<React.SetStateAction<Set<string>>>, id: string) => {
+    setter(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
 
   return (
-    <motion.main
-      className="space-y-24"
-      variants={VARIANTS_CONTAINER}
-      initial="hidden"
-      animate="visible"
-    >
+    <main className="space-y-24 pb-24">
+      {/* Work Experience */}
       <motion.section
-        variants={variantsSection}
-        transition={transitionSection}
+        variants={variants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        transition={SECTION_TRANSITION}
       >
-      </motion.section>
-
-      <motion.section
-        variants={variantsSection}
-        transition={transitionSection}
-      >
-        <h3 className="mb-5 text-lg font-medium">Work Experience</h3>
-        <div className="flex flex-col space-y-2">
+        <h2 className="mb-6 text-2xl font-semibold tracking-tight text-[var(--apple-text)]">
+          Work Experience
+        </h2>
+        <div className="flex flex-col gap-4">
           {WORK_EXPERIENCE.map((job) => (
             <div
               key={job.id}
-              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
+              className="apple-card cursor-pointer p-5"
+              onClick={() => toggle(setExpandedWorkIds, job.id)}
             >
-              <Spotlight
-                className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
-                size={64}
-              />
-              <div 
-                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
-                onClick={() => toggleWork(job.id)}
-              >
-                <div className="relative flex w-full flex-row items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-normal dark:text-zinc-100">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex min-w-0 flex-1 gap-3">
+                  <img
+                    src={job.logo}
+                    alt={job.company}
+                    className="mt-0.5 size-9 shrink-0 rounded-lg object-contain bg-[var(--apple-bg-secondary)] p-1.5"
+                  />
+                  <div className="min-w-0">
+                    <h3 className="text-[17px] font-medium text-[var(--apple-text)]">
                       {job.title}
-                    </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
+                    </h3>
+                    <p className="text-[15px] text-[var(--apple-text-secondary)]">
                       {job.company}
                     </p>
                   </div>
-                  <p className="shrink-0 whitespace-nowrap text-xs text-zinc-600 dark:text-zinc-400">
-                    {job.start} - {job.end}
-                  </p>
                 </div>
-                <AnimatePresence>
-                  {expandedWorkIds.has(job.id) && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={transitionExpand}
-                      className="mt-3 space-y-4 overflow-hidden"
-                    >
-                      <div>
-                        <p className="mb-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                          Key Responsibilities:
-                        </p>
-                        <ul className="space-y-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-                          {job.responsibilities.map((resp, index) => (
-                            <li key={index} className="flex gap-2">
-                              <span
-                                aria-hidden="true"
-                                className="mt-2 size-1 shrink-0 rounded-full bg-current opacity-40"
-                              />
-                              <span>{resp}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <p className="mb-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                          Technologies:
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {job.technologies.map((tech, index) => (
-                            <span
-                              key={index}
-                              className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <p className="shrink-0 text-[13px] text-[var(--apple-text-secondary)]">
+                  {job.start} – {job.end}
+                </p>
               </div>
+              <AnimatePresence>
+                {expandedWorkIds.has(job.id) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={expandTransition}
+                    className="mt-4 space-y-4 overflow-hidden"
+                  >
+                    <ul className="space-y-2">
+                      {job.responsibilities.map((resp, i) => (
+                        <li key={i} className="flex gap-2.5 text-[15px] text-[var(--apple-text-secondary)]">
+                          <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--apple-accent)]" />
+                          <span>{resp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {job.technologies.map((tech, i) => (
+                        <span
+                          key={i}
+                          className="rounded-full bg-[var(--apple-bg-secondary)] px-3 py-1 text-[12px] font-medium text-[var(--apple-text-secondary)]"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>
       </motion.section>
 
+      {/* Education */}
       <motion.section
-        variants={variantsSection}
-        transition={transitionSection}
+        variants={variants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        transition={SECTION_TRANSITION}
       >
-        <h3 className="mb-5 text-lg font-medium">Education</h3>
-        <div className="flex flex-col space-y-2">
+        <h2 className="mb-6 text-2xl font-semibold tracking-tight text-[var(--apple-text)]">
+          Education
+        </h2>
+        <div className="flex flex-col gap-4">
           {EDUCATION.map((edu) => (
             <div
               key={edu.id}
-              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
+              className="apple-card cursor-pointer p-5"
+              onClick={() => toggle(setExpandedEducationIds, edu.id)}
             >
-              <Spotlight
-                className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
-                size={64}
-              />
-              <div 
-                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
-                onClick={() => toggleEducation(edu.id)}
-              >
-                <div className="relative flex w-full flex-row items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-normal dark:text-zinc-100">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex min-w-0 flex-1 gap-3">
+                  <img
+                    src={edu.logo}
+                    alt={edu.institution}
+                    className="mt-0.5 size-9 shrink-0 rounded-lg object-contain bg-[var(--apple-bg-secondary)] p-1.5"
+                  />
+                  <div className="min-w-0">
+                    <h3 className="text-[17px] font-medium text-[var(--apple-text)]">
                       {edu.degree} in {edu.field}
-                    </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
+                    </h3>
+                    <p className="text-[15px] text-[var(--apple-text-secondary)]">
                       {edu.institution}
                     </p>
                   </div>
-                  <p className="shrink-0 whitespace-nowrap text-xs text-zinc-600 dark:text-zinc-400">
-                    {edu.start} - {edu.end}
-                  </p>
                 </div>
-                <AnimatePresence>
-                  {expandedEducationIds.has(edu.id) && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={transitionExpand}
-                      className="mt-3 space-y-2 overflow-hidden"
-                    >
-                      <p className="text-zinc-500 dark:text-zinc-400">
-                        GPA: {edu.gpa}
-                      </p>
-                      <div>
-                        <p className="mb-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                          Key Courses:
-                        </p>
-                        <ul className="space-y-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-                          {edu.courses.map((course, index) => (
-                            <li key={index} className="flex gap-2">
-                              <span
-                                aria-hidden="true"
-                                className="mt-2 size-1 shrink-0 rounded-full bg-current opacity-40"
-                              />
-                              <span>{course}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <p className="shrink-0 text-[13px] text-[var(--apple-text-secondary)]">
+                  {edu.start} – {edu.end}
+                </p>
               </div>
-            </div>
-          ))}
-        </div>
-      </motion.section>
-
-      <motion.section
-        variants={variantsSection}
-        transition={transitionSection}
-      >
-        <h3 className="mb-5 text-lg font-medium">Selected Projects</h3>
-        <div className="flex flex-col space-y-2">
-          {PROJECTS.map((project) => (
-            <div
-              key={project.id}
-              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
-            >
-              <Spotlight
-                className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
-                size={64}
-              />
-              <div 
-                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
-                onClick={() => toggleProject(project.id)}
-              >
-                <div className="relative flex w-full flex-row items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-normal dark:text-zinc-100">
-                      {project.name}
-                    </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
-                      {project.description}
+              <AnimatePresence>
+                {expandedEducationIds.has(edu.id) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={expandTransition}
+                    className="mt-4 space-y-3 overflow-hidden"
+                  >
+                    <p className="text-[15px] text-[var(--apple-text-secondary)]">
+                      GPA: {edu.gpa}
                     </p>
-                    <AnimatePresence>
-                      {expandedProjectIds.has(project.id) && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={transitionExpand}
-                          className="mt-2 space-y-4 overflow-hidden"
-                        >
-                          <div>
-                            <p className="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                              Key Features:
-                            </p>
-                            <ul className="space-y-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-                              {project.features.map((feature, index) => (
-                                <li key={index} className="flex gap-2">
-                                  <span
-                                    aria-hidden="true"
-                                    className="mt-2 size-1 shrink-0 rounded-full bg-current opacity-40"
-                                  />
-                                  <span>{feature}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div>
-                            <p className="mb-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                              Technologies:
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {project.technologies.map((tech, index) => (
-                                <span
-                                  key={index}
-                                  className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
-                                >
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="flex gap-4">
-                            <a
-                              href={project.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-block text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                            >
-                              View Project →
-                            </a>
-                            {project.video && (
-                              <a
-                                href={project.video}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-block text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                              >
-                                View Paper →
-                              </a>
-                            )}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              </div>
+                    <ul className="space-y-1.5">
+                      {edu.courses.map((course, i) => (
+                        <li key={i} className="flex gap-2.5 text-[15px] text-[var(--apple-text-secondary)]">
+                          <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--apple-accent)]" />
+                          <span>{course}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </div>
       </motion.section>
 
+      {/* Blog */}
       <motion.section
-        variants={variantsSection}
-        transition={transitionSection}
+        variants={variants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        transition={SECTION_TRANSITION}
       >
-        <h3 className="mb-5 text-lg font-medium">Certifications</h3>
-        <div className="flex flex-col space-y-2">
-          {CERTIFICATIONS.map((cert) => (
-            <div
-              key={cert.id}
-              className="group relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:shadow-[0_8px_30px_rgb(0_0_0/0.06)] active:scale-[0.985] dark:bg-zinc-600/30 dark:hover:shadow-[0_8px_30px_rgb(0_0_0/0.35)]"
-            >
-              <Spotlight
-                className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
-                size={64}
-              />
-              <div 
-                className="relative h-full w-full cursor-pointer select-none rounded-[15px] bg-white p-4 dark:bg-zinc-950"
-                onClick={() => toggleCertification(cert.id)}
-              >
-                <div className="relative flex w-full flex-row items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h4 className="font-normal dark:text-zinc-100">
-                      {cert.name}
-                    </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
-                      {cert.issuer}
-                    </p>
-                  </div>
-                  <p className="shrink-0 whitespace-nowrap text-xs text-zinc-600 dark:text-zinc-400">
-                    {cert.date}
-                  </p>
-                </div>
-                <AnimatePresence>
-                  {expandedCertificationIds.has(cert.id) && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={transitionExpand}
-                      className="mt-3 space-y-2 overflow-hidden"
-                    >
-                      <p className="text-zinc-500 dark:text-zinc-400">
-                        {cert.description}
-                      </p>
-                      <a
-                        href={cert.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                      >
-                        View Certificate →
-                      </a>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          ))}
-        </div>
-      </motion.section>
-
-      <motion.section
-        variants={variantsSection}
-        transition={transitionSection}
-      >
-        <h3 className="mb-3 text-lg font-medium">Blog</h3>
-        <div className="flex flex-col space-y-0">
+        <h2 className="mb-6 text-2xl font-semibold tracking-tight text-[var(--apple-text)]">
+          Blog
+        </h2>
+        <div className="flex flex-col gap-1">
           <AnimatedBackground
             enableHover
-            className="h-full w-full rounded-lg bg-zinc-100 dark:bg-zinc-900/80"
-            transition={{
-              type: 'spring',
-              bounce: 0,
-              duration: 0.2,
-            }}
+            className="h-full w-full rounded-xl bg-[var(--apple-accent)]/10 dark:bg-[var(--apple-accent)]/15"
+            transition={{ type: 'spring', bounce: 0, duration: 0.25 }}
           >
             {BLOG_POSTS.map((post) => (
               <Link
                 key={post.uid}
-                className="-mx-3 rounded-xl px-3 py-3"
+                className="relative block rounded-xl px-4 py-4"
                 href={post.link}
                 data-id={post.uid}
               >
-                <div className="flex flex-col space-y-1">
-                  <h4 className="font-normal dark:text-zinc-100">
-                    {post.title}
-                  </h4>
-                  <p className="text-zinc-500 dark:text-zinc-400">
+                <h3 className="text-[17px] font-medium text-[var(--apple-text)]">
+                  {post.title}
+                </h3>
+                {post.description && (
+                  <p className="mt-0.5 text-[15px] text-[var(--apple-text-secondary)]">
                     {post.description}
                   </p>
-                </div>
+                )}
               </Link>
             ))}
           </AnimatedBackground>
         </div>
       </motion.section>
 
+      {/* Certifications */}
       <motion.section
-        variants={variantsSection}
-        transition={transitionSection}
+        variants={variants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        transition={SECTION_TRANSITION}
       >
-        <h3 className="mb-5 text-lg font-medium">Connect</h3>
-        <p className="mb-5 text-zinc-600 dark:text-zinc-400">
-          Feel free to contact me at{' '}
-          <a className="underline dark:text-zinc-300" href={`mailto:${EMAIL}`}>
-            {EMAIL}
-          </a>
-        </p>
-        <div className="flex items-center justify-start space-x-3">
-          {SOCIAL_LINKS.map((link) => (
-            <MagneticSocialLink key={link.label} link={link.link}>
-              {link.label}
-            </MagneticSocialLink>
+        <h2 className="mb-6 text-2xl font-semibold tracking-tight text-[var(--apple-text)]">
+          Certifications
+        </h2>
+        <div className="flex flex-col gap-4">
+          {CERTIFICATIONS.map((cert) => (
+            <div
+              key={cert.id}
+              className="apple-card cursor-pointer p-5"
+              onClick={() => toggle(setExpandedCertificationIds, cert.id)}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-[17px] font-medium text-[var(--apple-text)]">
+                    {cert.name}
+                  </h3>
+                  <p className="text-[15px] text-[var(--apple-text-secondary)]">
+                    {cert.issuer}
+                  </p>
+                </div>
+                <p className="shrink-0 text-[13px] text-[var(--apple-text-secondary)]">
+                  {cert.date}
+                </p>
+              </div>
+              <AnimatePresence>
+                {expandedCertificationIds.has(cert.id) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={expandTransition}
+                    className="mt-4 space-y-3 overflow-hidden"
+                  >
+                    {cert.description && (
+                      <p className="text-[15px] text-[var(--apple-text-secondary)]">
+                        {cert.description}
+                      </p>
+                    )}
+                    <a
+                      href={cert.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block text-[15px] font-medium text-[var(--apple-accent)] transition-opacity hover:opacity-70"
+                    >
+                      View Certificate →
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ))}
         </div>
       </motion.section>
-    </motion.main>
+
+      {/* Projects */}
+      <motion.section
+        variants={variants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        transition={SECTION_TRANSITION}
+      >
+        <h2 className="mb-6 text-2xl font-semibold tracking-tight text-[var(--apple-text)]">
+          Selected Projects
+        </h2>
+        <div className="flex flex-col gap-4">
+          {PROJECTS.map((project) => (
+            <div
+              key={project.id}
+              className="apple-card cursor-pointer p-5"
+              onClick={() => toggle(setExpandedProjectIds, project.id)}
+            >
+              <div>
+                <h3 className="text-[17px] font-medium text-[var(--apple-text)]">
+                  {project.name}
+                </h3>
+                <p className="text-[15px] text-[var(--apple-text-secondary)]">
+                  {project.description}
+                </p>
+              </div>
+              <AnimatePresence>
+                {expandedProjectIds.has(project.id) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={expandTransition}
+                    className="mt-4 space-y-4 overflow-hidden"
+                  >
+                    <ul className="space-y-2">
+                      {project.features.map((feature, i) => (
+                        <li key={i} className="flex gap-2.5 text-[15px] text-[var(--apple-text-secondary)]">
+                          <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--apple-accent)]" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.map((tech, i) => (
+                        <span
+                          key={i}
+                          className="rounded-full bg-[var(--apple-bg-secondary)] px-3 py-1 text-[12px] font-medium text-[var(--apple-text-secondary)]"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-4 pt-1">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[15px] font-medium text-[var(--apple-accent)] transition-opacity hover:opacity-70"
+                      >
+                        View Project →
+                      </a>
+                      {project.video && (
+                        <a
+                          href={project.video}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[15px] font-medium text-[var(--apple-accent)] transition-opacity hover:opacity-70"
+                        >
+                          View Paper →
+                        </a>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Connect */}
+      <motion.section
+        variants={variants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-80px' }}
+        transition={SECTION_TRANSITION}
+      >
+        <h2 className="mb-6 text-2xl font-semibold tracking-tight text-[var(--apple-text)]">
+          Connect
+        </h2>
+        <p className="mb-5 text-[17px] text-[var(--apple-text-secondary)]">
+          Feel free to reach out at{' '}
+          <a
+            className="font-medium text-[var(--apple-accent)] transition-opacity hover:opacity-70"
+            href={`mailto:${EMAIL}`}
+          >
+            {EMAIL}
+          </a>
+        </p>
+        <div className="flex items-center gap-3">
+          {SOCIAL_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-[var(--apple-bg-secondary)] px-4 py-2 text-[14px] font-medium text-[var(--apple-text)] transition-all duration-200 hover:bg-[var(--apple-accent)] hover:text-white"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </motion.section>
+    </main>
   )
 }

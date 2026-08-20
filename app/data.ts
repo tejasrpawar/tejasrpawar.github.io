@@ -15,6 +15,7 @@ type WorkExperience = {
   end: string
   link: string
   id: string
+  logo: string
   description: string
   responsibilities: string[]
   technologies: string[]
@@ -41,6 +42,7 @@ type Education = {
   gpa: string
   link: string
   id: string
+  logo: string
   courses: string[]
 }
 
@@ -125,6 +127,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     end: 'present',
     link: '',
     id: 'work1',
+    logo: '/images/logos/aws_logo.webp',
     description: '',
     responsibilities: [
       'Designed and launched an action execution service for Quick Suite\'s AI agents from scratch to GA in 5 months as sole owner, built on Lambda, Smithy, and CDK across 7 production regions.',
@@ -149,6 +152,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     end: 'August 2025',
     link: '',
     id: 'work2',
+    logo: '/images/logos/gs_logo.png',
     description: '',
     responsibilities: [
       'Engineered an eventually consistent distributed system for multi-million USD trade automation in equity risk management using Java, React, and Kafka Streams, optimizing high-throughput multithreaded workflows for data integrity.'
@@ -166,6 +170,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     end: 'Jul 2023',
     link: 'https://airtel.in',
     id: 'work3',
+    logo: '/images/logos/airtel_logo.png',
     description: '',
     responsibilities: [
       'Led backend modernization using Docker, Kafka, and scalable data pipelines, improving API response times by 40% and driving 15% higher user engagement across Airtel\'s digital platform.',
@@ -192,6 +197,7 @@ export const WORK_EXPERIENCE: WorkExperience[] = [
     end: 'Jul 2021',
     link: 'https://airtel.in',
     id: 'work4',
+    logo: '/images/logos/airtel_logo.png',
     description: '',
     responsibilities: [
       'Planned and programmed a self-serve tool using Java Spring Boot and containerized the application with Docker, which streamlined third-party integration with Airtel Digital Store and reduced integration time by over 50%',
@@ -254,6 +260,7 @@ export const EDUCATION: Education[] = [
     link: 'https://example.com',
     gpa: '3.8/4.0',
     id: 'edu1',
+    logo: '/images/logos/Utah_Utes_-_U_logo.svg.webp',
     courses: [
       'Advanced Algorithms', 'Computer Architecture', 'Machine Learning', 'Operating Systems', 'Computational Geometry'
     ]
@@ -267,6 +274,7 @@ export const EDUCATION: Education[] = [
     link: 'https://example.com',
     gpa: '8.2/10.0',
     id: 'edu2',
+    logo: '/images/logos/Indian_Institute_of_Information_Technology,_Allahabad_Logo.png',
     courses: [
       'Design And Analysis Of Algorithms', 'Data Structures And Algorithms', 'Database Management System', 'Operating System', 'Object Oriented Methodology', 'Data Mining', 'Deep Learning', 'Linear Algebra', 'Probability And Statistics'
     ]
